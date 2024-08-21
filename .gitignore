@@ -1,0 +1,24 @@
+# unity
+.vs/
+Library/
+Logs/
+obj/
+Packages/
+Temp/
+UserSettings/
+.vscode/
+*.userprefs
+*.unityproj
+*.DS_Store
+*.vsconfig
+
+# unity打包
+MMO-Client-Release/
+
+# 热更相关
+HybridCLRData/
+/**/[Bb]uild*/
+/**/[Bb]uilds*/
+/**/StreamingAssets/yoo/
+/**/StreamingAssets/*.dll.bytes
+/**/StreamingAssets/*.dll.bytes.meta
