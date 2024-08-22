@@ -11,7 +11,7 @@ UserSettings/
 *.unityproj
 *.DS_Store
 *.vsconfig
-
+/GameClient/EFXNNB/Assets/Art
 # unity打包
 MMO-Client-Release/
 
