@@ -8,17 +8,36 @@ using UnityEngine;
 /// </summary>
 public class PlayerMovementController : MonoBehaviour
 {
+    enum MotionState
+    {
+        Idle, Walk, Run, Courch
+    };
 
+    [Header("杂七杂八")]
     private CharacterController characterController;
+    private Vector3 motionDir;                          //移动的方向
 
-    [Header("玩家数值")]
-    [Tooltip("当前速度")] private float curSpeed;
-    [Tooltip("行走速度")] private float walkSpeed = 4f;
-    [Tooltip("奔跑速度")] private float runSpeed = 6f;
-    [Tooltip("下蹲速度")] private float crouchSpeed = 2f;
+    [Header("move相关")]
+    public float curSpeed;
+    private float walkSpeed = 4f;
+    private float runSpeed = 8f;
+    private float crouchSpeed = 2f;
+    private MotionState motionState;
 
-    [Tooltip("行动方向")] private Vector3 motionDir;
+    [Header("jump相关")]
+    public float curJumpForce;
+    public float initJumpForce = 5f;
+    public float gravity = -9.8f;
+    private CollisionFlags collisionFlags;  //配合cc.move()用于描述碰撞的结果
+    public bool isGround;
 
+    [Header("crouch相关")]
+    private float crouchHeight = 1f;
+    private float standHeight;
+    private float crouchCenter = 0.5f;
+    private Vector3 standCenter;
+    private bool isCrouching;
+    private LayerMask crouchLayerMask;
 
 
 
@@ -29,7 +48,15 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Start()
     {
+        motionState = MotionState.Idle;
 
+        curJumpForce = -2f;
+        isGround = false;
+
+        isCrouching = false;
+        standHeight = characterController.height;
+        standCenter = (standHeight / 2.0f) *Vector3.up;
+        crouchLayerMask = LayerMask.GetMask("Ground","Wall", "Tunnel");
     }
 
     private void OnDestroy()
@@ -38,6 +65,8 @@ public class PlayerMovementController : MonoBehaviour
 
     void Update()
     {
+        Crouch();
+        Jump();
         Move();
     }
 
@@ -51,16 +80,84 @@ public class PlayerMovementController : MonoBehaviour
             // 计算移动方向
             motionDir = (transform.right * h + transform.forward * v).normalized;
 
-            //根据条件设置当前speed
-            curSpeed = walkSpeed;
+            //根据条件设置当前motionState
+            if (isCrouching)
+            {
+                curSpeed = crouchSpeed;
+            }
+            else if (GameInputManager.Instance.Run)
+            {
+                motionState = MotionState.Run;
+                curSpeed = runSpeed;
+            }else {
+                motionState = MotionState.Walk;
+                curSpeed = walkSpeed;
+            }
 
             // 移动角色
-            characterController.Move(motionDir * curSpeed * Time.deltaTime);
+            collisionFlags = characterController.Move(motionDir * curSpeed * Time.deltaTime);
 
         }
 
     }
 
+    private void Jump()
+    {
+        if (motionState == MotionState.Courch) return;
 
+        if (GameInputManager.Instance.Jump && isGround)
+        {
+            isGround = false;
+            curJumpForce = initJumpForce;
+
+        }
+
+        curJumpForce = curJumpForce + gravity * Time.deltaTime;
+        Vector3 jumpV3 = new Vector3(0, curJumpForce * Time.deltaTime, 0);
+        collisionFlags = characterController.Move(jumpV3);
+
+        if (collisionFlags == CollisionFlags.Below)
+        {
+            isGround = true;
+            curJumpForce = -2f;
+        }
+
+    }
+
+
+    private bool CanCrouchToUp()
+    {
+        Vector3 headPos = transform.position + Vector3.up * standHeight;
+        int count =  (Physics.OverlapSphere(headPos, characterController.radius, crouchLayerMask)).Length;
+        return count <= 0;
+    }
+
+    private void Crouch()
+    {
+        if (GameInputManager.Instance.Crouch)
+        {
+            isCrouching = true;
+            motionState = MotionState.Courch;
+
+            characterController.height = crouchHeight;
+            characterController.center = new Vector3(0, crouchCenter, 0);
+
+            Kaiyun.Event.FireIn("StandToCrouch");
+        }
+        else
+        {
+            if (isCrouching && CanCrouchToUp())
+            {
+                isCrouching = false;
+                motionState = MotionState.Idle;
+
+                characterController.height = standHeight;
+                characterController.center = standCenter;
+
+                Kaiyun.Event.FireIn("CrouchToStand");
+            }
+
+        }
+    }
 
 }

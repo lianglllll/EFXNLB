@@ -8,20 +8,44 @@ using UnityEngine;
 public class FPCamera : MonoBehaviour
 {
     private Transform Assult_Rife_Arm;
+    private CharacterController characterController;
 
-    [Tooltip("灵敏度")] public float mouseSensitivity = 400f;
-    private float yRotation = 0f;//摄像机上下旋转
+    public float mouseSensitivity = 300f;   //旋转灵敏度
+    private float yRotation = 0f;           //摄像机上下旋转
+    
+    private float curHight;                 //相对父物体的cur高度
+    public float interpolationSpeed = 12f; //高度变换的平滑值
+    private bool isHightChangeing;
 
+
+    private void Awake()
+    {
+        Assult_Rife_Arm = transform.Find("Assult_Rife_Arm").GetComponent<Transform>();
+        characterController = transform.GetComponent<CharacterController>();
+    }
     private void Start()
     {
         //鼠标隐藏
         Cursor.lockState = CursorLockMode.Locked;
-        Assult_Rife_Arm = transform.Find("Assult_Rife_Arm").GetComponent<Transform>();
+        Kaiyun.Event.RegisterIn("StandToCrouch", this, "BeginHightChange");
+        Kaiyun.Event.RegisterIn("CrouchToStand", this, "BeginHightChange");
+        isHightChangeing = true;
+    }
+
+    private void OnDestroy()
+    {
+        Kaiyun.Event.UnregisterIn("StandToCrouch", this, "BeginHightChange");
+        Kaiyun.Event.UnregisterIn("CrouchToStand", this, "BeginHightChange");
+
     }
 
     private void Update()
     {
         MouseLook();
+        if (isHightChangeing)
+        {
+            HightChange();
+        }
     }
 
     private void MouseLook()
@@ -45,5 +69,20 @@ public class FPCamera : MonoBehaviour
 
     }
 
+    public void BeginHightChange()
+    {
+        isHightChangeing = true;
+    }
+
+    private void HightChange()
+    {
+        float heightTarget = characterController.height * 0.9f;
+        curHight = Mathf.Lerp(curHight,  heightTarget,interpolationSpeed*Time.deltaTime);
+        Assult_Rife_Arm.localPosition = Vector3.up * curHight;
+        if(Mathf.Abs(heightTarget - curHight) < 0.01f)
+        {
+            isHightChangeing = false;
+        }
+    }
 
 }

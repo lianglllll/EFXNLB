@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GGG.Tool.Singleton
+namespace Game.Tool.Singleton
 {
     public abstract class SingletonNonMono<T> where T : class,new()
     {

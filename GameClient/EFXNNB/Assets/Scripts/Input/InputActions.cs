@@ -55,6 +55,24 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Crouch"",
+                    ""type"": ""Button"",
+                    ""id"": ""783d5478-4fcc-470d-908e-397e9b5d9978"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""e55f197d-0212-4b84-b0ed-49232b1da703"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""LAttack"",
                     ""type"": ""Button"",
                     ""id"": ""25d0162b-c3b1-4113-8e51-8928c9e74620"",
@@ -215,7 +233,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""631bcf74-49d6-4e72-bc15-f140ceddfe68"",
-                    ""path"": ""<Keyboard>/leftShift"",
+                    ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -332,6 +350,28 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Enter"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""682b467f-235c-47ed-8469-5a39371b7ce6"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Crouch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c1cf5884-a961-4fb6-babf-8a1756612bbd"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -343,6 +383,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_GameInput_Movement = m_GameInput.FindAction("Movement", throwIfNotFound: true);
         m_GameInput_CameraLook = m_GameInput.FindAction("CameraLook", throwIfNotFound: true);
         m_GameInput_Run = m_GameInput.FindAction("Run", throwIfNotFound: true);
+        m_GameInput_Crouch = m_GameInput.FindAction("Crouch", throwIfNotFound: true);
+        m_GameInput_Jump = m_GameInput.FindAction("Jump", throwIfNotFound: true);
         m_GameInput_LAttack = m_GameInput.FindAction("LAttack", throwIfNotFound: true);
         m_GameInput_RAttack = m_GameInput.FindAction("RAttack", throwIfNotFound: true);
         m_GameInput_Climb = m_GameInput.FindAction("Climb", throwIfNotFound: true);
@@ -415,6 +457,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_GameInput_Movement;
     private readonly InputAction m_GameInput_CameraLook;
     private readonly InputAction m_GameInput_Run;
+    private readonly InputAction m_GameInput_Crouch;
+    private readonly InputAction m_GameInput_Jump;
     private readonly InputAction m_GameInput_LAttack;
     private readonly InputAction m_GameInput_RAttack;
     private readonly InputAction m_GameInput_Climb;
@@ -432,6 +476,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @Movement => m_Wrapper.m_GameInput_Movement;
         public InputAction @CameraLook => m_Wrapper.m_GameInput_CameraLook;
         public InputAction @Run => m_Wrapper.m_GameInput_Run;
+        public InputAction @Crouch => m_Wrapper.m_GameInput_Crouch;
+        public InputAction @Jump => m_Wrapper.m_GameInput_Jump;
         public InputAction @LAttack => m_Wrapper.m_GameInput_LAttack;
         public InputAction @RAttack => m_Wrapper.m_GameInput_RAttack;
         public InputAction @Climb => m_Wrapper.m_GameInput_Climb;
@@ -460,6 +506,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Run.started -= m_Wrapper.m_GameInputActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_GameInputActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_GameInputActionsCallbackInterface.OnRun;
+                @Crouch.started -= m_Wrapper.m_GameInputActionsCallbackInterface.OnCrouch;
+                @Crouch.performed -= m_Wrapper.m_GameInputActionsCallbackInterface.OnCrouch;
+                @Crouch.canceled -= m_Wrapper.m_GameInputActionsCallbackInterface.OnCrouch;
+                @Jump.started -= m_Wrapper.m_GameInputActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_GameInputActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_GameInputActionsCallbackInterface.OnJump;
                 @LAttack.started -= m_Wrapper.m_GameInputActionsCallbackInterface.OnLAttack;
                 @LAttack.performed -= m_Wrapper.m_GameInputActionsCallbackInterface.OnLAttack;
                 @LAttack.canceled -= m_Wrapper.m_GameInputActionsCallbackInterface.OnLAttack;
@@ -503,6 +555,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
+                @Crouch.started += instance.OnCrouch;
+                @Crouch.performed += instance.OnCrouch;
+                @Crouch.canceled += instance.OnCrouch;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
                 @LAttack.started += instance.OnLAttack;
                 @LAttack.performed += instance.OnLAttack;
                 @LAttack.canceled += instance.OnLAttack;
@@ -542,6 +600,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnCameraLook(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+        void OnCrouch(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
         void OnLAttack(InputAction.CallbackContext context);
         void OnRAttack(InputAction.CallbackContext context);
         void OnClimb(InputAction.CallbackContext context);
