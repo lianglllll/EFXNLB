@@ -58,12 +58,12 @@
   <ItemGroup>
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Demo_Scene_Components\Scripts\DebrisScript.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Demo_Scene_Components\Scripts\ExplosiveBarrelScript.cs" />
-    <Compile Include="Assets\Scripts\Tools\Singleton\Singleton.cs" />
+    <Compile Include="Assets\Scripts\GameFramework\Singleton\Singleton.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Scripts\Casings_&amp;_Projectiles\CasingScript.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Third_Person_Character\Components\Plane_Demo_Scene_Components\Scripts\FieldOfViewIncreaseLPFP.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Scripts\Weapon_Scripts\AutomaticGunScriptLPFP.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Scripts\Bullet\BulletScript.cs" />
-    <Compile Include="Assets\Scripts\Tools\EventSystem\Event.cs" />
+    <Compile Include="Assets\Scripts\GameFramework\EventSystem\Event.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Third_Person_Character\Components\Plane_Demo_Scene_Components\Scripts\PropellerRotateLPFP.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Scripts\Casings_&amp;_Projectiles\ProjectileScript.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Scripts\Misc\LookAtCamera.cs" />
@@ -82,7 +82,7 @@
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Demo_Scene_Components\Scripts\TargetScript.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Scripts\Weapon_Scripts\BoltActionSniperScriptLPFP.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Scripts\Weapon_Scripts\PumpShotgunScriptLPFP.cs" />
-    <Compile Include="Assets\Scripts\Tools\Singleton\SingletonNonMono.cs" />
+    <Compile Include="Assets\Scripts\GameFramework\Singleton\SingletonNonMono.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Demo_Scene_Components\Scripts\LightMovementScript.cs" />
     <Compile Include="Assets\Scripts\Camera\FPCamera.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Scripts\Explosions_&amp;_Impacts\ExplosionScript.cs" />
@@ -90,7 +90,13 @@
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Scripts\FPSController\FpsControllerLPFP.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Third_Person_Character\Components\Plane_Demo_Scene_Components\Scripts\PlaneDoorLightsLPFP.cs" />
     <Compile Include="Assets\Art\Low Poly FPS Pack\Components\Scripts\Weapon_Scripts\HandgunScriptLPFP.cs" />
+    <Compile Include="Assets\Scripts\GameFramework\AudioSystem\AudioMananger.cs" />
     <Compile Include="Assets\Scripts\Player\PlayerMovementController.cs" />
+    <Compile Include="Assets\Scripts\Player\Weapon_AutomaticGun.cs" />
+    <Compile Include="Assets\Scripts\Player\Weapon.cs" />
+    <Compile Include="Assets\Scripts\GameFramework\Timer\GameTimer.cs" />
+    <Compile Include="Assets\Scripts\GameFramework\Timer\GameTimerManager.cs" />
+    <Compile Include="Assets\Scripts\UI\CombatPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

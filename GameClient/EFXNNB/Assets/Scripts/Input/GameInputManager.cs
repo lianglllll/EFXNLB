@@ -17,6 +17,8 @@ public class GameInputManager : Singleton<GameInputManager>
 
     public bool Climb => _inputActions.GameInput.Climb.triggered;
     public bool LAttack => _inputActions.GameInput.LAttack.triggered;
+    public bool LAttackSustain => _inputActions.GameInput.LAttack.phase == InputActionPhase.Performed;
+
     public bool RAttack => _inputActions.GameInput.RAttack.triggered;
     public bool Grab => _inputActions.GameInput.Grab.triggered;
     public bool TakeOut => _inputActions.GameInput.TakeOut.triggered;

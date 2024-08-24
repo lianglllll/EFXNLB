@@ -3,26 +3,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum MoveState
+{
+    Idle, Walk, Run, Courch
+};
+
+
 /// <summary>
 /// 移动控制器
 /// </summary>
 public class PlayerMovementController : MonoBehaviour
 {
-    enum MotionState
-    {
-        Idle, Walk, Run, Courch
-    };
 
     [Header("杂七杂八")]
     private CharacterController characterController;
-    private Vector3 motionDir;                          //移动的方向
+    private AudioSource audioSource;
 
     [Header("move相关")]
     public float curSpeed;
     private float walkSpeed = 4f;
     private float runSpeed = 8f;
     private float crouchSpeed = 2f;
-    private MotionState motionState;
+    private MoveState moveState;
+    private Vector3 motionDir;                          //移动的方向
 
     [Header("jump相关")]
     public float curJumpForce;
@@ -40,15 +44,21 @@ public class PlayerMovementController : MonoBehaviour
     private LayerMask crouchLayerMask;
 
 
+    [Header("audio相关")]
+    public AudioClip walkAudioClip;
+    public AudioClip runAudioClip;
+
+
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
     {
-        motionState = MotionState.Idle;
+        moveState = MoveState.Idle;
 
         curJumpForce = -2f;
         isGround = false;
@@ -68,6 +78,7 @@ public class PlayerMovementController : MonoBehaviour
         Crouch();
         Jump();
         Move();
+        PlayerFootSounds();
     }
 
     private void Move()
@@ -87,10 +98,13 @@ public class PlayerMovementController : MonoBehaviour
             }
             else if (GameInputManager.Instance.Run)
             {
-                motionState = MotionState.Run;
+                MoveStateChange(MoveState.Run);
+
                 curSpeed = runSpeed;
             }else {
-                motionState = MotionState.Walk;
+                MoveStateChange(MoveState.Walk);
+
+
                 curSpeed = walkSpeed;
             }
 
@@ -98,12 +112,52 @@ public class PlayerMovementController : MonoBehaviour
             collisionFlags = characterController.Move(motionDir * curSpeed * Time.deltaTime);
 
         }
+        else
+        {
+            MoveStateChange(MoveState.Idle);
+        }
 
+    }
+
+    private void MoveStateChange(MoveState state)
+    {
+        if (moveState == state) return;
+        moveState = state;
+        //做点状态改变的后处理
+        Kaiyun.Event.FireIn("moveStateChange", moveState);
+    }
+
+
+    private void PlayerFootSounds()
+    {
+        if (isGround && (moveState == MoveState.Walk || moveState == MoveState.Run))
+        {
+            if(moveState == MoveState.Walk)
+            {
+                audioSource.clip = walkAudioClip;
+            }else
+            {
+                audioSource.clip = runAudioClip;
+            }
+
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+
+        }
+        else
+        {
+            if (audioSource.isPlaying)
+            {
+                audioSource.Pause();
+            }
+        }
     }
 
     private void Jump()
     {
-        if (motionState == MotionState.Courch) return;
+        if (moveState == MoveState.Courch) return;
 
         if (GameInputManager.Instance.Jump && isGround)
         {
@@ -137,7 +191,7 @@ public class PlayerMovementController : MonoBehaviour
         if (GameInputManager.Instance.Crouch)
         {
             isCrouching = true;
-            motionState = MotionState.Courch;
+            moveState = MoveState.Courch;
 
             characterController.height = crouchHeight;
             characterController.center = new Vector3(0, crouchCenter, 0);
@@ -149,7 +203,7 @@ public class PlayerMovementController : MonoBehaviour
             if (isCrouching && CanCrouchToUp())
             {
                 isCrouching = false;
-                motionState = MotionState.Idle;
+                moveState = MoveState.Idle;
 
                 characterController.height = standHeight;
                 characterController.center = standCenter;
