@@ -15,10 +15,10 @@ public enum MoveState
 /// </summary>
 public class PlayerMovementController : MonoBehaviour
 {
-
-    [Header("杂七杂八")]
+    [Header("临时用")]
     private CharacterController characterController;
-    private AudioSource audioSource;
+    private Animator animator;
+    private Vector3 motionDir;                          //移动的方向
 
     [Header("move相关")]
     public float curSpeed;
@@ -26,7 +26,6 @@ public class PlayerMovementController : MonoBehaviour
     private float runSpeed = 8f;
     private float crouchSpeed = 2f;
     private MoveState moveState;
-    private Vector3 motionDir;                          //移动的方向
 
     [Header("jump相关")]
     public float curJumpForce;
@@ -47,12 +46,14 @@ public class PlayerMovementController : MonoBehaviour
     [Header("audio相关")]
     public AudioClip walkAudioClip;
     public AudioClip runAudioClip;
+    private AudioSource audioSource;
 
 
 
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        animator = transform.Find("Assult_Rife_Arm/arms_assault_rifle_01").GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -124,6 +125,22 @@ public class PlayerMovementController : MonoBehaviour
         if (moveState == state) return;
         moveState = state;
         //做点状态改变的后处理
+        if(moveState == MoveState.Run)
+        {
+            animator.SetBool("isRun", true);
+            animator.SetBool("isWalk", true);
+        }else if(moveState == MoveState.Walk )
+        {
+            animator.SetBool("isRun", false);
+            animator.SetBool("isWalk", true);
+        }
+        else 
+        {
+            animator.SetBool("isRun", false);
+            animator.SetBool("isWalk", false);
+        }
+
+
         Kaiyun.Event.FireIn("moveStateChange", moveState);
     }
 
@@ -190,6 +207,8 @@ public class PlayerMovementController : MonoBehaviour
     {
         if (GameInputManager.Instance.Crouch)
         {
+            if (!isGround) return;
+
             isCrouching = true;
             moveState = MoveState.Courch;
 

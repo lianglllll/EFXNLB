@@ -13,13 +13,17 @@ public class GameInputManager : Singleton<GameInputManager>
     public bool Run => _inputActions.GameInput.Run.phase == InputActionPhase.Performed;                                   
     public bool Jump => _inputActions.GameInput.Jump.triggered;                                 //点击触发
     public bool Crouch => _inputActions.GameInput.Crouch.phase == InputActionPhase.Performed;   //按住
+    public bool Reload => _inputActions.GameInput.Reload.triggered;
+    public bool ChangeShootMode => _inputActions.GameInput.ChangeShootMode.triggered;
+    public bool InspectWeapon => _inputActions.GameInput.InspectWeapon.triggered;
+
+    public bool LAttack => _inputActions.GameInput.LAttack.triggered;
+    public bool LAttackSustain => _inputActions.GameInput.LAttack.phase == InputActionPhase.Performed;
+    public bool RAttack => _inputActions.GameInput.RAttack.triggered;
+    public bool RAttackSustain => _inputActions.GameInput.RAttack.phase == InputActionPhase.Performed;
 
 
     public bool Climb => _inputActions.GameInput.Climb.triggered;
-    public bool LAttack => _inputActions.GameInput.LAttack.triggered;
-    public bool LAttackSustain => _inputActions.GameInput.LAttack.phase == InputActionPhase.Performed;
-
-    public bool RAttack => _inputActions.GameInput.RAttack.triggered;
     public bool Grab => _inputActions.GameInput.Grab.triggered;
     public bool TakeOut => _inputActions.GameInput.TakeOut.triggered;
     public bool Dash => _inputActions.GameInput.Dash.triggered;

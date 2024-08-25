@@ -73,6 +73,24 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""598e23c3-3e0c-4e42-bad2-844489067b6d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeShootMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""ccb3dc1c-334a-451a-96a2-6e1500e9535a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""LAttack"",
                     ""type"": ""Button"",
                     ""id"": ""25d0162b-c3b1-4113-8e51-8928c9e74620"",
@@ -157,6 +175,15 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""name"": ""Enter"",
                     ""type"": ""Button"",
                     ""id"": ""5a923448-2431-4793-8970-8fb72c3b4b1e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""InspectWeapon"",
+                    ""type"": ""Button"",
+                    ""id"": ""679be79b-55f2-446d-b46e-02b3ecb0f654"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -372,6 +399,39 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bc365f69-59a0-4ce4-a649-f66fbdece1da"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a1450117-b8ab-4a04-9f98-5263178fa7ce"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeShootMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""37917d31-444d-499a-b55e-61f104219111"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InspectWeapon"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -385,6 +445,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_GameInput_Run = m_GameInput.FindAction("Run", throwIfNotFound: true);
         m_GameInput_Crouch = m_GameInput.FindAction("Crouch", throwIfNotFound: true);
         m_GameInput_Jump = m_GameInput.FindAction("Jump", throwIfNotFound: true);
+        m_GameInput_Reload = m_GameInput.FindAction("Reload", throwIfNotFound: true);
+        m_GameInput_ChangeShootMode = m_GameInput.FindAction("ChangeShootMode", throwIfNotFound: true);
         m_GameInput_LAttack = m_GameInput.FindAction("LAttack", throwIfNotFound: true);
         m_GameInput_RAttack = m_GameInput.FindAction("RAttack", throwIfNotFound: true);
         m_GameInput_Climb = m_GameInput.FindAction("Climb", throwIfNotFound: true);
@@ -395,6 +457,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_GameInput_EquipWP = m_GameInput.FindAction("EquipWP", throwIfNotFound: true);
         m_GameInput_Quit = m_GameInput.FindAction("Quit", throwIfNotFound: true);
         m_GameInput_Enter = m_GameInput.FindAction("Enter", throwIfNotFound: true);
+        m_GameInput_InspectWeapon = m_GameInput.FindAction("InspectWeapon", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -459,6 +522,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_GameInput_Run;
     private readonly InputAction m_GameInput_Crouch;
     private readonly InputAction m_GameInput_Jump;
+    private readonly InputAction m_GameInput_Reload;
+    private readonly InputAction m_GameInput_ChangeShootMode;
     private readonly InputAction m_GameInput_LAttack;
     private readonly InputAction m_GameInput_RAttack;
     private readonly InputAction m_GameInput_Climb;
@@ -469,6 +534,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_GameInput_EquipWP;
     private readonly InputAction m_GameInput_Quit;
     private readonly InputAction m_GameInput_Enter;
+    private readonly InputAction m_GameInput_InspectWeapon;
     public struct GameInputActions
     {
         private @InputActions m_Wrapper;
@@ -478,6 +544,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @Run => m_Wrapper.m_GameInput_Run;
         public InputAction @Crouch => m_Wrapper.m_GameInput_Crouch;
         public InputAction @Jump => m_Wrapper.m_GameInput_Jump;
+        public InputAction @Reload => m_Wrapper.m_GameInput_Reload;
+        public InputAction @ChangeShootMode => m_Wrapper.m_GameInput_ChangeShootMode;
         public InputAction @LAttack => m_Wrapper.m_GameInput_LAttack;
         public InputAction @RAttack => m_Wrapper.m_GameInput_RAttack;
         public InputAction @Climb => m_Wrapper.m_GameInput_Climb;
@@ -488,6 +556,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @EquipWP => m_Wrapper.m_GameInput_EquipWP;
         public InputAction @Quit => m_Wrapper.m_GameInput_Quit;
         public InputAction @Enter => m_Wrapper.m_GameInput_Enter;
+        public InputAction @InspectWeapon => m_Wrapper.m_GameInput_InspectWeapon;
         public InputActionMap Get() { return m_Wrapper.m_GameInput; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -512,6 +581,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Jump.started -= m_Wrapper.m_GameInputActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_GameInputActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_GameInputActionsCallbackInterface.OnJump;
+                @Reload.started -= m_Wrapper.m_GameInputActionsCallbackInterface.OnReload;
+                @Reload.performed -= m_Wrapper.m_GameInputActionsCallbackInterface.OnReload;
+                @Reload.canceled -= m_Wrapper.m_GameInputActionsCallbackInterface.OnReload;
+                @ChangeShootMode.started -= m_Wrapper.m_GameInputActionsCallbackInterface.OnChangeShootMode;
+                @ChangeShootMode.performed -= m_Wrapper.m_GameInputActionsCallbackInterface.OnChangeShootMode;
+                @ChangeShootMode.canceled -= m_Wrapper.m_GameInputActionsCallbackInterface.OnChangeShootMode;
                 @LAttack.started -= m_Wrapper.m_GameInputActionsCallbackInterface.OnLAttack;
                 @LAttack.performed -= m_Wrapper.m_GameInputActionsCallbackInterface.OnLAttack;
                 @LAttack.canceled -= m_Wrapper.m_GameInputActionsCallbackInterface.OnLAttack;
@@ -542,6 +617,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Enter.started -= m_Wrapper.m_GameInputActionsCallbackInterface.OnEnter;
                 @Enter.performed -= m_Wrapper.m_GameInputActionsCallbackInterface.OnEnter;
                 @Enter.canceled -= m_Wrapper.m_GameInputActionsCallbackInterface.OnEnter;
+                @InspectWeapon.started -= m_Wrapper.m_GameInputActionsCallbackInterface.OnInspectWeapon;
+                @InspectWeapon.performed -= m_Wrapper.m_GameInputActionsCallbackInterface.OnInspectWeapon;
+                @InspectWeapon.canceled -= m_Wrapper.m_GameInputActionsCallbackInterface.OnInspectWeapon;
             }
             m_Wrapper.m_GameInputActionsCallbackInterface = instance;
             if (instance != null)
@@ -561,6 +639,12 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
+                @Reload.started += instance.OnReload;
+                @Reload.performed += instance.OnReload;
+                @Reload.canceled += instance.OnReload;
+                @ChangeShootMode.started += instance.OnChangeShootMode;
+                @ChangeShootMode.performed += instance.OnChangeShootMode;
+                @ChangeShootMode.canceled += instance.OnChangeShootMode;
                 @LAttack.started += instance.OnLAttack;
                 @LAttack.performed += instance.OnLAttack;
                 @LAttack.canceled += instance.OnLAttack;
@@ -591,6 +675,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Enter.started += instance.OnEnter;
                 @Enter.performed += instance.OnEnter;
                 @Enter.canceled += instance.OnEnter;
+                @InspectWeapon.started += instance.OnInspectWeapon;
+                @InspectWeapon.performed += instance.OnInspectWeapon;
+                @InspectWeapon.canceled += instance.OnInspectWeapon;
             }
         }
     }
@@ -602,6 +689,8 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnRun(InputAction.CallbackContext context);
         void OnCrouch(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
+        void OnChangeShootMode(InputAction.CallbackContext context);
         void OnLAttack(InputAction.CallbackContext context);
         void OnRAttack(InputAction.CallbackContext context);
         void OnClimb(InputAction.CallbackContext context);
@@ -612,5 +701,6 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnEquipWP(InputAction.CallbackContext context);
         void OnQuit(InputAction.CallbackContext context);
         void OnEnter(InputAction.CallbackContext context);
+        void OnInspectWeapon(InputAction.CallbackContext context);
     }
 }

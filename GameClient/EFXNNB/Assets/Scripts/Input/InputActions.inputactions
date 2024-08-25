@@ -51,6 +51,24 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "598e23c3-3e0c-4e42-bad2-844489067b6d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ChangeShootMode",
+                    "type": "Button",
+                    "id": "ccb3dc1c-334a-451a-96a2-6e1500e9535a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "LAttack",
                     "type": "Button",
                     "id": "25d0162b-c3b1-4113-8e51-8928c9e74620",
@@ -135,6 +153,15 @@
                     "name": "Enter",
                     "type": "Button",
                     "id": "5a923448-2431-4793-8970-8fb72c3b4b1e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "InspectWeapon",
+                    "type": "Button",
+                    "id": "679be79b-55f2-446d-b46e-02b3ecb0f654",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -348,6 +375,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bc365f69-59a0-4ce4-a649-f66fbdece1da",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a1450117-b8ab-4a04-9f98-5263178fa7ce",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ChangeShootMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "37917d31-444d-499a-b55e-61f104219111",
+                    "path": "<Keyboard>/h",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "InspectWeapon",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -8,6 +8,7 @@ public class CombatPanel : MonoBehaviour
     private List<Image> crossQuarterImgs = new List<Image>();
     private Image dot;
 
+    GameObject cross;
     private float curCrossExpandDegree;                   //当前准星开合度
     private float perFrameCrossExpandDegree = 5f;         //每帧准星开合度
     private bool isExpandCross;
@@ -18,10 +19,11 @@ public class CombatPanel : MonoBehaviour
 
     private void Awake()
     {
-        Transform Crosshair = transform.Find("Crosshair/Holder");
-        for (int i = 0; i < Crosshair.childCount; ++i)
+        cross = transform.Find("Crosshair").gameObject;
+        Transform Holder = transform.Find("Crosshair/Holder");
+        for (int i = 0; i < Holder.childCount; ++i)
         {
-            crossQuarterImgs.Add(Crosshair.GetChild(i).GetComponent<Image>());
+            crossQuarterImgs.Add(Holder.GetChild(i).GetComponent<Image>());
         }
         dot = transform.Find("Crosshair/NoHolder/dot").GetComponent<Image>();
 
@@ -38,7 +40,6 @@ public class CombatPanel : MonoBehaviour
     {
         if (isExpandCross)
         {
-            Debug.Log("debug:" + curCrossExpandDegree);
             if (Mathf.Abs(targetCrossExpandDegree - curCrossExpandDegree) <= 0.01f)
             {
                 curCrossExpandDegree = targetCrossExpandDegree;
@@ -61,9 +62,9 @@ public class CombatPanel : MonoBehaviour
         AmmoTextUI.text = curBulletNum + "/" + reserveBulletNum;
     }
 
-    public void ShootModeTextUIUpdate(int flag)
+    public void ShootModeTextUIUpdate(string text)
     {
-        ShootModeTextUI.text = flag == 0 ? "全自动" : "半自动";
+        ShootModeTextUI.text = text;
     }
 
     private void CrossColorChange(Color color)
@@ -81,6 +82,7 @@ public class CombatPanel : MonoBehaviour
         isExpandCross = true;
     }
 
+    //射击时改变的准星开合度
     public void ShootExpandCross(float initDegree)
     {
         targetCrossExpandDegree += perFrameCrossExpandDegree * 3;
@@ -109,6 +111,10 @@ public class CombatPanel : MonoBehaviour
         crossQuarterImgs[3].transform.localPosition += new Vector3(0, -add, 0);  //下
     }
 
+    public void setCross(bool isOpen)
+    {
+        cross.SetActive(isOpen);
+    }
 
 
 }
