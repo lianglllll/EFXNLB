@@ -1,3 +1,7 @@
+![image-removebg-preview](README.assets/image-removebg-preview.png)
+
+
+
 # Escape from Xiaonanliang Boundary
 
 逃出小南梁界.
