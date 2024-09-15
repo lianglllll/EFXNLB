@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Metal
+  - Target
+  - Blood
+  - Dirt
+  - Concrete
+  - ExplosiveBarrel
+  - GasTank
   layers:
   - Default
   - TransparentFX

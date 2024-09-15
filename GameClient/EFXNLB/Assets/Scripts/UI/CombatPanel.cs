@@ -1,3 +1,4 @@
+using BaseSystem.MyDelayedTaskScheduler;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -88,7 +89,7 @@ public class CombatPanel : MonoBehaviour
         targetCrossExpandDegree += perFrameCrossExpandDegree * 3;
         isExpandCross = true;
 
-        GameTimerManager.Instance.TryUseOneTimer(0.1f, () =>
+        DelayedTaskScheduler.Instance.AddDelayedTask(0.1f, () =>
         {
             targetCrossExpandDegree -= perFrameCrossExpandDegree * 3;
             if(targetCrossExpandDegree < initDegree)
