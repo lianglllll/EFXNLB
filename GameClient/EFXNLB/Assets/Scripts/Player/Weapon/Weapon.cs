@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,8 +6,6 @@ using UnityEngine;
 public abstract class Weapon : MonoBehaviour
 {
     public abstract void GunFire();
-
-
     public abstract void Reload();
 
     /// 动画里面调用。
@@ -19,5 +18,7 @@ public abstract class Weapon : MonoBehaviour
     //不同的换弹动画
     public abstract void ReloadBegin();
 
+    public abstract void Init();
 
+    public abstract void Close();
 }

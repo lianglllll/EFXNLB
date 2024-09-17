@@ -48,24 +48,13 @@ public class PlayerMovementController : MonoBehaviour
     public AudioClip runAudioClip;
     private AudioSource audioSource;
 
-
-
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
-        var a1 = transform.Find("Assult_Rife_Arm/Inventory/AK47").GetComponent<Animator>();
-        var a2 = transform.Find("Assult_Rife_Arm/Inventory/M4A1").GetComponent<Animator>();
-        if (a1.isActiveAndEnabled)
-        {
-            animator = a1;
-        }
-        else
-        {
-            animator = a2;
-        }
         audioSource = GetComponent<AudioSource>();
+        animator = transform.Find("Assult_Rife_Arm/Inventory/0").GetComponent<Animator>();
     }
-
+    
     private void Start()
     {
         moveState = MoveState.Idle;
@@ -239,5 +228,11 @@ public class PlayerMovementController : MonoBehaviour
 
         }
     }
+
+    private void ChangeWeapon(GameObject weapon)
+    {
+        animator = weapon.GetComponent<Animator>();
+    }
+
 
 }

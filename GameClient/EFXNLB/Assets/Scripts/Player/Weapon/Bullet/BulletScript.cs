@@ -21,15 +21,8 @@ public class BulletScript : MonoBehaviour {
 	public Transform [] dirtImpactPrefabs;
 	public Transform []	concreteImpactPrefabs;
 
-	private bool isDestroy;
 
-	private void OnEnable()
-    {
-		isDestroy = false;
-		DelayedTaskScheduler.Instance.AddDelayedTask(destroyAfter, () => {
-			RecycleItem();
-		});
-	}
+
 
 	//If the bullet collides with anything
 	private void OnCollisionEnter (Collision collision) 
@@ -151,12 +144,24 @@ public class BulletScript : MonoBehaviour {
 
 	}
 
+
+	private bool isDestroy;
+	private string RecycleItemId;
+	public void Init(string RecycleItemId)
+    {
+		isDestroy = false;
+		this.RecycleItemId = RecycleItemId;
+		DelayedTaskScheduler.Instance.AddDelayedTask(destroyAfter, () => {
+			RecycleItem();
+		});
+	}
+
 	private void RecycleItem()
     {
 		if (isDestroy) return;
 		isDestroy = true;
 		gameObject.SetActive(false);
-		UnityObjectPoolFactory.Instance.RecycleItem("Weapons/Prefabs/BulletTail/Bullet_Prefab", gameObject);
+		UnityObjectPoolFactory.Instance.RecycleItem(RecycleItemId, gameObject);
 	}
 
 }

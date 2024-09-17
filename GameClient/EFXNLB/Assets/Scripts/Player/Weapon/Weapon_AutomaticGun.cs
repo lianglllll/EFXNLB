@@ -1,5 +1,6 @@
 using BaseSystem.MyDelayedTaskScheduler;
 using BaseSystem.PoolModule;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,8 +38,8 @@ public class Weapon_AutomaticGun : Weapon
     public bool isSilencer;
 
     private int curBulletNum;
-    private int oneBulletCapacity = 31;
-    private int reserveBulletNum;
+    private int oneBulletCapacity = 31444;
+    private int reserveBulletNum = 0;
     private float reloadTime = 1.4f;                       //换弹的时间
     private float reloadOutAmmoTime = 2.27f;
     private bool isReloading;
@@ -66,6 +67,7 @@ public class Weapon_AutomaticGun : Weapon
     [Header("声音")]
     private AudioSource mainAudioSource;
     public GunSoundClips soundClips;
+    private float initAudioVolume = 0.5f;
 
     [Header("UI")]
     private CombatPanel combatPanel;
@@ -73,10 +75,10 @@ public class Weapon_AutomaticGun : Weapon
     private Camera gunCamera;
 
     [Header("瞄准")]
-    private bool isAim;
-    private bool AimEnd;
-    private Vector3 initRiflePosion;
-    public Vector3 aimRiflePosion;
+    private bool isAiming;
+    private bool isAimIn;
+    private bool isAimOut;
+    private float aimInDuration = 0.3f; // 动画时长
 
 
     [Header("其他中间变量")]
@@ -94,7 +96,7 @@ public class Weapon_AutomaticGun : Weapon
         muzzleSparkParticles = transform.Find("Armature/weapon/Components/SparkParticles").GetComponent<ParticleSystem>();
 
         bulletPrefab = "Weapons/Prefabs/BulletTail/Bullet_Prefab";
-        casingPrefab ="Weapons/Prefabs/Casing_Prefabs/Small_Casing_Prefab";
+        casingPrefab = "Weapons/Prefabs/Casing_Prefabs/Big_Casing_Prefab";
 
         mainAudioSource = transform.GetComponent<AudioSource>();
 
@@ -111,31 +113,52 @@ public class Weapon_AutomaticGun : Weapon
     {
         muzzleflashLight.enabled = false;
 
-        canFire = false;
-        DelayedTaskScheduler.Instance.AddDelayedTask(trunGunDuration*0.2f, () => {
-            mainAudioSource.clip = soundClips.turnGunSound;
-            mainAudioSource.Play();
-        });
-        DelayedTaskScheduler.Instance.AddDelayedTask(trunGunDuration, () => {
-            canFire = true;
-        });
         curBulletNum = oneBulletCapacity;
         reserveBulletNum = oneBulletCapacity * 5;
-        isReloading = false;
 
-        shootMode = ShootMode.FullyAutomatic;
-        
+        isReloading = false;
         combatPanel.AmmoTextUIUpdate(curBulletNum, reserveBulletNum);
         combatPanel.ShootModeTextUIUpdate(ShootModeToString(shootMode));
 
-        isAim = false;
-        AimEnd = true;
-        initRiflePosion = transform.localPosition;
+        shootMode = ShootMode.FullyAutomatic;
+
+        canFire = false;
+
 
         Kaiyun.Event.RegisterIn("moveStateChange", this, "moveStateChange");
 
-
     }
+
+    string task1;
+    string task2;
+    public override void Init()
+    {
+        canFire = false;
+        task1 = DelayedTaskScheduler.Instance.AddDelayedTask(trunGunDuration * 0.2f, () => {
+            mainAudioSource.volume = initAudioVolume;
+            mainAudioSource.clip = soundClips.turnGunSound;
+            mainAudioSource.time = 0;
+            mainAudioSource.Play();
+        });
+        task2 = DelayedTaskScheduler.Instance.AddDelayedTask(trunGunDuration, () => {
+            canFire = true;
+        });
+        combatPanel.AmmoTextUIUpdate(curBulletNum, reserveBulletNum);
+        combatPanel.ShootModeTextUIUpdate(ShootModeToString(shootMode));
+
+        isAiming = false;
+        isAimIn = false;
+        isAimOut = false;
+    }
+
+    public override void Close()
+    {
+        mainAudioSource.volume = 0f;
+        mainAudioSource.Stop();
+        DelayedTaskScheduler.Instance.RemoveDelayedTask(task1);
+        DelayedTaskScheduler.Instance.RemoveDelayedTask(task2);
+    }
+
 
     private void OnDestroy()
     {
@@ -161,17 +184,11 @@ public class Weapon_AutomaticGun : Weapon
 
         if (GameInputManager.Instance.RAttackSustain && !isReloading)
         {
-            isAim = true;
-            animator.SetBool("isAim", isAim);
-            transform.localPosition = aimRiflePosion;
-
-            AimEnd = false;
+            animator.SetBool("isAim", true);
         }
         else
         {
-            isAim = false;
-            animator.SetBool("isAim", isAim);
-            transform.localPosition = initRiflePosion;
+            animator.SetBool("isAim", false);
         }
 
 
@@ -186,7 +203,7 @@ public class Weapon_AutomaticGun : Weapon
 
     public override void GunFire()
     {
-        if (!canFire || isReloading)
+        if (!canFire || isReloading || isAimIn || isAimOut)
         {
             return;
         }
@@ -214,7 +231,7 @@ public class Weapon_AutomaticGun : Weapon
         mainAudioSource.Play();
 
         //动画
-        if (!isAim)
+        if (!isAiming)
         {
             animator.CrossFadeInFixedTime("fire", 0.1f);
             curSpreadFactor = noAimSpreadFactor;
@@ -247,17 +264,20 @@ public class Weapon_AutomaticGun : Weapon
 
         // 生成子弹并设置其方向和速度
         Transform bullet = UnityObjectPoolFactory.Instance.GetItem<GameObject>(bulletPrefab).transform;
-        bullet.gameObject.SetActive(true);
+        //bullet.SetParent(null);
         bullet.position = BulletGeneratePoint.position;
         bullet.rotation = Quaternion.LookRotation(bulletDir);
         bullet.GetComponent<Rigidbody>().velocity = bulletDir * bulletForce;
-        //Debug.Log($"{bullet.gameObject.GetInstanceID()}=获取子弹");
+        bullet.gameObject.SetActive(true);
+        bullet.GetComponent<BulletScript>().Init(bulletPrefab);
 
         //子弹抛壳
         Transform casing = UnityObjectPoolFactory.Instance.GetItem<GameObject>(casingPrefab).transform;
-        casing.gameObject.SetActive(true);
+        //casing.SetParent(null);
         casing.position = casingBulletSpawnPoint.position;
         casing.rotation = casingBulletSpawnPoint.rotation;
+        casing.gameObject.SetActive(true);
+        casing.GetComponent<BulletCasing>().Init(casingPrefab);
 
 
         //info更新
@@ -275,34 +295,46 @@ public class Weapon_AutomaticGun : Weapon
         combatPanel.AmmoTextUIUpdate(curBulletNum, reserveBulletNum);
     }
 
+    ///动画事件调用
+    public void BeginAimIn()
+    {
+        isAiming = true;
+        //视野拉近
+        //mainCamera.fieldOfView = 30f;
+        DOTween.To(() => mainCamera.fieldOfView, x => mainCamera.fieldOfView = x, 30f, aimInDuration);
+        isAimIn = true;
+    }
     public override void AimIn()
     {
         //隐藏准星
         combatPanel.setCross(false);
-
         //瞄准声音
         PlaySound(soundClips.aimSound);
-
-        //视野拉近
-        mainCamera.fieldOfView = 30f;
-
+        isAimIn = false;
     }
-    public override void AimOut()
+
+    public void BeginAimOut()
     {
         combatPanel.setCross(true);
         //视野拉远
-        mainCamera.fieldOfView = 60f;
+        //mainCamera.fieldOfView = 60f;
+        DOTween.To(() => mainCamera.fieldOfView, x => mainCamera.fieldOfView = x, 60f, aimInDuration);
+
         //瞄准声音
         PlaySound(soundClips.aimSound);
-
-        AimEnd = true;
+        isAimOut = true;
+    }
+    public override void AimOut()
+    {
+        isAimOut = false ;
+        isAiming = false;
     }
 
     public override void ReloadBegin()
     {
         if (curBulletNum >= oneBulletCapacity || reserveBulletNum <= 0) return;
         if (isReloading) return;
-        if (!AimEnd) return;
+        if (isAiming || isAimIn || isAimOut) return;
 
         isReloading = true;
 
@@ -419,5 +451,6 @@ public class Weapon_AutomaticGun : Weapon
         mainAudioSource.clip = clip;
         mainAudioSource.Play();
     }
+
 
 }

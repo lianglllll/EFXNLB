@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 54238244902362926}
   - component: {fileID: 114121961160874846}
   - component: {fileID: 82444821930212418}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Small_Casing_Prefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}

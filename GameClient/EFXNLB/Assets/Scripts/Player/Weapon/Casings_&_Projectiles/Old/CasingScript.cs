@@ -38,37 +38,14 @@ public class CasingScript : MonoBehaviour {
 	[Tooltip("How fast the casing spins over time")]
 	public float speed = 2500.0f;
 
+	private Rigidbody mrigidbody;
+
 	//Launch the casing at start
 	private void Awake () 
 	{
-		//Random rotation of the casing
-		GetComponent<Rigidbody>().AddRelativeTorque (
-			Random.Range(minimumRotation, maximumRotation), //X Axis
-			Random.Range(minimumRotation, maximumRotation), //Y Axis
-			Random.Range(minimumRotation, maximumRotation)  //Z Axis
-			* Time.deltaTime);
 
-		//Random direction the casing will be ejected in
-		GetComponent<Rigidbody>().AddRelativeForce (
-			Random.Range (minimumXForce, maximumXForce),  //X Axis
-			Random.Range (minimumYForce, maximumYForce),  //Y Axis
-			Random.Range (minimumZForce, maximumZForce)); //Z Axis		     
-	}
-
-
-    private void OnEnable() 
-	{
-		//Start the remove/destroy coroutine
-		DelayedTaskScheduler.Instance.AddDelayedTask(despawnTime, () => {
-			RemoveCasing();        
-		});
-		//Set random rotation at start
-		transform.rotation = Random.rotation;
-
-		//Start play sound coroutine
-		DelayedTaskScheduler.Instance.AddDelayedTask(Random.Range(0.25f, 0.85f), () => {
-			PlaySound();
-		});
+		mrigidbody = GetComponent<Rigidbody>();
+  
 	}
 
 	private void FixedUpdate () 
@@ -87,12 +64,43 @@ public class CasingScript : MonoBehaviour {
 		audioSource.Play();
 	}
 
+	private string RecycleItemId;
+	public void Init(string id)
+    {
+		this.RecycleItemId = id;
+
+		//Random direction the casing will be ejected in
+		mrigidbody.AddRelativeForce(
+			Random.Range(minimumXForce, maximumXForce),  //X Axis
+			Random.Range(minimumYForce, maximumYForce),  //Y Axis
+			Random.Range(minimumZForce, maximumZForce)); //Z Axis		   
+
+		//Random rotation of the casing
+		mrigidbody.AddRelativeTorque(
+			Random.Range(minimumRotation, maximumRotation), //X Axis
+			Random.Range(minimumRotation, maximumRotation), //Y Axis
+			Random.Range(minimumRotation, maximumRotation)  //Z Axis
+			* Time.deltaTime);
+
+		//Start the remove/destroy coroutine
+		DelayedTaskScheduler.Instance.AddDelayedTask(despawnTime, () => {
+			RemoveCasing();
+		});
+		//Set random rotation at start
+		transform.rotation = Random.rotation;
+
+		//Start play sound coroutine
+		DelayedTaskScheduler.Instance.AddDelayedTask(Random.Range(0.25f, 0.85f), () => {
+			PlaySound();
+		});
+	}
+	
 	private void RemoveCasing () 
 	{
 		//Destroy the casing after set amount of seconds
 		//Destroy casing object
 		//Destroy (gameObject);
-		UnityObjectPoolFactory.Instance.RecycleItem("Weapons/Prefabs/Casing_Prefabs/Small_Casing_Prefab", gameObject);
+		UnityObjectPoolFactory.Instance.RecycleItem(RecycleItemId, gameObject);
 		gameObject.SetActive(false);
 	}
 }

@@ -12,7 +12,7 @@ public class Res
         T resource = Resources.Load<T>(path);
         if (resource == null)
         {
-            Debug.LogWarning($"Resource of type {typeof(T)} not found at {path}!");
+            Debug.Log($"Resource of type {typeof(T)} not found at {path}!");
         }
         return resource;
     }
